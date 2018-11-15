@@ -1,0 +1,14 @@
+{
+  "data_url": "https://archive.ics.uci.edu/ml/machine-learning-databases/00442/",
+  "devices": {
+        "Danmini_Doorbell": {"claimed_num_of_instances": 49548, "claimed_training_time_sec": 555, "learning_rate": 0.012, "epochs": 800, "claimed_tr": 0.042, "claimed_ws": 82},
+        "Ecobee_Thermostat": {"claimed_num_of_instances": 13113, "claimed_training_time_sec": 54, "learning_rate": 0.028, "epochs": 250, "claimed_tr": 0.011, "claimed_ws": 20},
+        "Ennio_Doorbell": {"claimed_num_of_instances": 39100, "claimed_training_time_sec": 215, "learning_rate": 0.003, "epochs": 350, "claimed_tr": 0.011, "claimed_ws": 22},
+        "Philips_B120N10_Baby_Monitor": {"claimed_num_of_instances": 175240, "claimed_training_time_sec": 292, "learning_rate": 0.016, "epochs": 100, "claimed_tr": 0.030, "claimed_ws": 65},
+        "Provision_PT_737E_Security_Camera": {"claimed_num_of_instances": 62154, "claimed_training_time_sec": 275, "learning_rate": 0.026, "epochs": 300, "claimed_tr": 0.035, "claimed_ws": 32},
+        "Provision_PT_838_Security_Camera": {"claimed_num_of_instances": 98514, "claimed_training_time_sec": 795, "learning_rate": 0.008, "epochs": 450, "claimed_tr": 0.038, "claimed_ws": 43},
+        "Samsung_SNH_1011_N_Webcam": {"claimed_num_of_instances": 52150, "claimed_training_time_sec": 150, "learning_rate": 0.013, "epochs": 150, "claimed_tr": 0.074, "claimed_ws": 32},
+        "SimpleHome_XCS7_1002_WHT_Security_Camera": {"claimed_num_of_instances": 46585, "claimed_training_time_sec": 220, "learning_rate": 0.017, "epochs": 230, "claimed_tr": 0.056, "claimed_ws": 23},
+        "SimpleHome_XCS7_1003_WHT_Security_Camera": {"claimed_num_of_instances": 19528, "claimed_training_time_sec": 190, "learning_rate": 0.006, "epochs": 500, "claimed_tr": 0.004, "claimed_ws": 25}
+    }
+}

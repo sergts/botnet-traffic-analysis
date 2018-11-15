@@ -1,0 +1,8 @@
+wget
+numpy
+pandas
+sklearn
+tensorflow
+keras
+tensorboard
+lime

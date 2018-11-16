@@ -13,9 +13,13 @@ from keras.layers import Input, Dense
 from keras.callbacks import ModelCheckpoint, TensorBoard
 from keras.optimizers import SGD
 
-def train():
+def train(top_n_features=10):
     print("Loading combined training data...")
     df = pd.concat((pd.read_csv(f) for f in iglob('../data/**/benign_traffic.csv', recursive=True)), ignore_index=True)
+
+    fisher = pd.read_csv('../fisher.csv')
+    features = fisher.iloc[0:int(top_n_features)]['Feature'].values
+    df = df[list(features)]
     #split randomly shuffled data into 3 equal parts
     x_train, x_opt, x_test = np.split(df.sample(frac=1, random_state=17), [int(1/3*len(df)), int(2/3*len(df))])
     scaler = StandardScaler()
@@ -24,10 +28,10 @@ def train():
     x_opt = scaler.transform(x_opt)
     x_test = scaler.transform(x_test)
 
-    model = create_model(115)
+    model = create_model(top_n_features)
     model.compile(loss="mean_squared_error",
                     optimizer="sgd")
-    cp = ModelCheckpoint(filepath="models/model.h5",
+    cp = ModelCheckpoint(filepath=f"models/model_{top_n_features}.h5",
                                save_best_only=True,
                                verbose=0)
     tb = TensorBoard(log_dir=f"./logs",
@@ -51,7 +55,7 @@ def train():
     print("max is %.5f" % mse.max())
     print("std is %.5f" % mse.std())
     tr = mse.mean() + mse.std()
-    with open('threshold', 'w') as t:
+    with open(f'threshold_{top_n_features}', 'w') as t:
         t.write(str(tr))
     print(f"Calculated threshold is {tr}")
 
@@ -78,4 +82,4 @@ def create_model(input_dim):
 
 
 if __name__ == '__main__':
-    train()
+    train(*sys.argv[1:])

@@ -35800,31 +35800,31 @@
 /***/ })
 /******/ ]);
 //# sourceMappingURL=bundle.js.map </script></head><body>
-        <div class="lime top_div" id="top_divQ97NS163MZ73QLS"></div>
+        <div class="lime top_div" id="top_divYT9A9N8RR89DI2L"></div>
         
         <script>
-        var top_div = d3.select('#top_divQ97NS163MZ73QLS').classed('lime top_div', true);
+        var top_div = d3.select('#top_divYT9A9N8RR89DI2L').classed('lime top_div', true);
         
             var pp_div = top_div.append('div')
                                 .classed('lime predict_proba', true);
             var pp_svg = pp_div.append('svg').style('width', '100%');
-            var pp = new lime.PredictProba(pp_svg, ["benign", "gafgyt", "mirai"], [6.397236039512588e-12, 0.9999456405639648, 5.432214311440475e-05]);
+            var pp = new lime.PredictProba(pp_svg, ["benign", "gafgyt", "mirai"], [0.9977205395698547, 0.0022794606629759073, 1.356225082960549e-16]);
             
         
         var exp_div;
             var exp = new lime.Explanation(["benign", "gafgyt", "mirai"]);
         
                 exp_div = top_div.append('div').classed('lime explanation', true);
-                exp.show([["-0.68 < MI_dir_L0.01_mean <= 1.08", 0.24636271569366158], ["-0.17 < MI_dir_L0.01_weight <= 0.82", -0.016409072018072082], ["-0.17 < H_L0.01_weight <= 0.82", 0.005688016882163989]], 1, exp_div);
+                exp.show([["74.30 < H_L0.01_mean <= 344.18", 0.022652704177129883], ["74.30 < MI_dir_L0.01_mean <= 344.18", 0.013296733002953438], ["74.13 < MI_dir_L0.1_mean <= 348.72", -0.011472684030995137], ["1.00 < H_L0.01_weight <= 16495.19", 0.011406715657452896], ["1.00 < MI_dir_L0.01_weight <= 16495.19", 0.002342185405138349]], 0, exp_div);
                 
                 exp_div = top_div.append('div').classed('lime explanation', true);
-                exp.show([["-0.68 < MI_dir_L0.01_mean <= 1.08", -0.27999584509527514], ["-0.17 < MI_dir_L0.01_weight <= 0.82", 0.07588015190505781], ["-0.17 < H_L0.01_weight <= 0.82", 0.05389722926700082]], 2, exp_div);
+                exp.show([["1.00 < H_L0.01_weight <= 16495.19", -0.13752161643817692], ["1.00 < MI_dir_L0.01_weight <= 16495.19", -0.11282588655287366], ["74.30 < MI_dir_L0.01_mean <= 344.18", 0.10930134451131436], ["74.13 < MI_dir_L0.1_mean <= 348.72", 0.08480265872553326], ["74.30 < H_L0.01_mean <= 344.18", 0.07885668188460979]], 1, exp_div);
                 
                 exp_div = top_div.append('div').classed('lime explanation', true);
-                exp.show([["-0.17 < H_L0.01_weight <= 0.82", -0.05958524606400752], ["-0.17 < MI_dir_L0.01_weight <= 0.82", -0.059471079447064895], ["-0.68 < MI_dir_L0.01_mean <= 1.08", 0.03363313047007036]], 0, exp_div);
+                exp.show([["1.00 < H_L0.01_weight <= 16495.19", 0.1261149001597934], ["74.30 < MI_dir_L0.01_mean <= 344.18", -0.12259807788527122], ["1.00 < MI_dir_L0.01_weight <= 16495.19", 0.11048370026147938], ["74.30 < H_L0.01_mean <= 344.18", -0.10150938588804319], ["74.13 < MI_dir_L0.1_mean <= 348.72", -0.07332997584453699]], 2, exp_div);
                 
         var raw_div = top_div.append('div');
-            exp.show_raw_tabular([["MI_dir_L0.01_mean", "-0.68", 0.24636271569366158], ["MI_dir_L0.01_weight", "0.18", -0.016409072018072082], ["H_L0.01_weight", "0.18", 0.005688016882163989]], 1, raw_div);
+            exp.show_raw_tabular([["H_L0.01_mean", "79.61", 0.022652704177129883], ["MI_dir_L0.01_mean", "79.61", 0.013296733002953438], ["MI_dir_L0.1_mean", "79.01", -0.011472684030995137], ["H_L0.01_weight", "40.44", 0.011406715657452896], ["MI_dir_L0.01_weight", "40.44", 0.002342185405138349]], 0, raw_div);
         
         </script>
         </body></html>

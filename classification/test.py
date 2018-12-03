@@ -28,15 +28,14 @@ def test_with_data(num_features, model_name, df):
     scaler = StandardScaler()
     print('Transforming data')
     scaler.fit(x_train)
-    x_train = scaler.transform(x_train)
-    x_test = scaler.transform(x_test)
+    x_test_scaled = scaler.transform(x_test)
 
     model = load_model(f'models/{model_name}')
-
+    wrapper = ModelWrapper(model, scaler)
     print('Model evaluation')
     print('Loss, accuracy')
-    print(model.evaluate(x_test, y_test))
-    y_pred_proba = model.predict(x_test)
+    print(model.evaluate(x_test_scaled, y_test))
+    y_pred_proba = model.predict(x_test_scaled)
     y_pred = np.argmax(y_pred_proba, axis=1)
 
     cnf_matrix = confusion_matrix(np.argmax(y_test.values, axis=1), y_pred)
@@ -46,15 +45,23 @@ def test_with_data(num_features, model_name, df):
     print(cnf_matrix)
 
     print('Explaining data using lime')
-    explainer = lime.lime_tabular.LimeTabularExplainer(x_train, feature_names=X.columns.tolist(), class_names=classes, discretize_continuous=True)
+    explainer = lime.lime_tabular.LimeTabularExplainer(x_train.values, feature_names=X.columns.tolist(), class_names=classes, discretize_continuous=True)
     for j in range(10):
         i = np.random.randint(0, x_test.shape[0])
         print(f'Explaining for record nr {i}')
-        exp = explainer.explain_instance(x_test[i], model.predict, num_features=int(num_features), top_labels=3)
+        exp = explainer.explain_instance(x_test.values[i], wrapper.scale_predict, num_features=int(num_features), top_labels=5)
         exp.save_to_file(f'lime/explanation{j}.html')
+        print(y_test.values[i])
         print(exp.as_list())
 
+class ModelWrapper:
+    def __init__(self, model, scaler):
+        self.model = model
+        self.scaler = scaler
 
+    def scale_predict(self, x):
+        x = self.scaler.transform(x)
+        return self.model.predict(x)
 
 if __name__ == '__main__':
     test(*sys.argv[1:])

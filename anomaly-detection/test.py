@@ -14,8 +14,8 @@ def load_mal_data():
     df_mirai = pd.concat((pd.read_csv(f) for f in iglob('../data/**/mirai_attacks/*.csv', recursive=True)), ignore_index=True)
     df_gafgyt = pd.DataFrame()
     for f in iglob('../data/**/gafgyt_attacks/*.csv', recursive=True):
-        #if 'tcp.csv' in f or 'udp.csv' in f:
-        #    continue
+    #    if 'tcp.csv' in f or 'udp.csv' in f:
+    #        continue
         df_gafgyt = df_gafgyt.append(pd.read_csv(f), ignore_index=True)
     return df_mirai.append(df_gafgyt)
     #return df_mirai
@@ -32,23 +32,23 @@ def test_with_data(top_n_features, df_malicious):
     x_train, x_opt, x_test = np.split(df.sample(frac=1, random_state=17), [int(1/3*len(df)), int(2/3*len(df))])
     scaler = StandardScaler()
     scaler.fit(x_train.append(x_opt))
-    x_train = scaler.transform(x_train)
+    
     print(f"Loading model")
     saved_model = load_model(f'models/model_{top_n_features}.h5')
     with open(f'threshold_{top_n_features}') as t:
         tr = np.float64(t.read())
     print(f"Calculated threshold is {tr}")
-    model = AnomalyModel(saved_model, tr)
+    model = AnomalyModel(saved_model, tr, scaler)
 
     df_benign = pd.DataFrame(x_test, columns=df.columns)
     df_benign['malicious'] = 0
     df_malicious = df_malicious.sample(n=df_benign.shape[0], random_state=17)[list(features)]
     df_malicious['malicious'] = 1
     df = df_benign.append(df_malicious)
-    X_test = df.drop(columns=['malicious'])
-    X_test = scaler.transform(X_test)
+    X_test = df.drop(columns=['malicious']).values
+    X_test_scaled = scaler.transform(X_test)
     Y_test = df['malicious']
-    Y_pred = model.predict(X_test)
+    Y_pred = model.predict(X_test_scaled)
     print('Accuracy')
     print(accuracy_score(Y_test, Y_pred))
     print('Recall')
@@ -61,8 +61,8 @@ def test_with_data(top_n_features, df_malicious):
     for j in range(5):
         i = np.random.randint(0, X_test.shape[0])
         print(f'Explaining for record nr {i}')
-        explainer = lime.lime_tabular.LimeTabularExplainer(x_train, feature_names=df.drop(columns=['malicious']).columns.tolist(), discretize_continuous=True)
-        exp = explainer.explain_instance(X_test[i], model.predict_classes)
+        explainer = lime.lime_tabular.LimeTabularExplainer(x_train.values, feature_names=df.drop(columns=['malicious']).columns.tolist(), discretize_continuous=True)
+        exp = explainer.explain_instance(X_test[i], model.scale_predict_classes)
         exp.save_to_file(f'lime/explanation{j}.html')
         print(exp.as_list())
         print('Actual class')
@@ -74,9 +74,10 @@ def get_one_hot(targets, nb_classes):
     return res.reshape(list(targets.shape)+[nb_classes])
 
 class AnomalyModel:
-    def __init__(self, model, threshold):
+    def __init__(self, model, threshold, scaler):
         self.model = model
         self.threshold = threshold
+        self.scaler = scaler
 
     def predict(self, x):
         x_pred = self.model.predict(x)
@@ -84,7 +85,8 @@ class AnomalyModel:
         y_pred = mse > self.threshold
         return y_pred.astype(int)
 
-    def predict_classes(self, x):
+    def scale_predict_classes(self, x):
+        x = self.scaler.transform(x)
         y_pred = self.predict(x)
         classes_arr = []
         for e in y_pred:

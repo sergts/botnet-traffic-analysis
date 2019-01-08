@@ -40,4 +40,4 @@ The paper does not specify:
 
 Therefore, default keras batch size was chosen.
 As activation function `tanh` was chosen for hidden layers, as it is a reasonable choice.
-For scaling, `sklearn's MinMaxScaler` was used.
+For scaling, `sklearn's StandardScaler` was used.

@@ -6,6 +6,7 @@ from glob import iglob
 import pandas as pd
 import numpy as np
 import tensorflow as tf
+import pickle
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix
 from keras.models import model_from_yaml
@@ -33,7 +34,7 @@ def load_data():
     print('Loaded, shape: ')
     print(df_benign.shape)
     df_benign['class'] = 'benign'
-    df = df_benign.append(df_gafgyt).append(df_mirai)
+    df = df_benign.append(df_gafgyt.sample(n=df_benign.shape[0], random_state=17)).append(df_mirai.sample(n=df_benign.shape[0], random_state=17))
     return df
 
 
@@ -53,7 +54,7 @@ def train(top_n_features = None):
 def train_with_data(top_n_features = None, df = None):
     X = df.drop(columns=['class'])
     if top_n_features is not None:
-        fisher = pd.read_csv('../fisher.csv')
+        fisher = pd.read_csv('../data/top_features_fisherscore.csv')
         features = fisher.iloc[0:int(top_n_features)]['Feature'].values
         X = X[list(features)]
     Y = pd.get_dummies(df['class'])
@@ -62,10 +63,13 @@ def train_with_data(top_n_features = None, df = None):
     scaler = StandardScaler()
     print('Transforming data')
     scaler.fit(x_train)
+    input_dim = X.shape[1]
+    scalerfile = f'./models/scaler_{input_dim}.sav'
+    pickle.dump(scaler, open(scalerfile, 'wb'))
     x_train = scaler.transform(x_train)
     x_test = scaler.transform(x_test)
     print('Creating a model')
-    input_dim = X.shape[1]
+    
     model = create_model(input_dim, 1, 128)
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     cp = ModelCheckpoint(filepath=f'./models/model_{input_dim}.h5',
